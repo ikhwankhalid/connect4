@@ -1,6 +1,12 @@
 import numpy as np
 from enum import Enum
 from typing import Optional
+from typing import Callable, Tuple
+
+
+class SavedState:
+    pass
+
 
 BoardPiece = np.int8
 NO_PLAYER = BoardPiece(0)   # board[i, j] == NO_PLAYER where the position is empty
@@ -23,8 +29,8 @@ def initialise_game_state() -> np.ndarray:
     return np.zeros((6, 7), dtype=BoardPiece)
 
 
-board = initialise_game_state()
-board[0, 0] = 2  # Lower left corner of the board
+# board = initialise_game_state()
+# [0, 0] = 2  # Lower left corner of the board
 
 
 # Something that takes a data structure, turns it into a string that can be printed to console and is human readable
@@ -42,15 +48,14 @@ def pretty_print_board(board: np.ndarray) -> str:
         |  O O X X     |
         |==============|
         |0 1 2 3 4 5 6 |
+        TODO: Replace 1->X and 2->O in pretty print
     """
     board = np.flip(board, 0)   # Flip so that [0, 0] is the bottom left corner
     columns = np.arange(7)
     ret = np.vstack((board, columns))
-    return np.array2string(ret)
-
-
-pp_board = pretty_print_board(board)
-print(pp_board)
+    ret = np.array2string(ret)
+    # ret = ret.replace('1', 'X')
+    return ret
 
 
 def string_to_board(pp_board: str) -> np.ndarray:
@@ -112,4 +117,16 @@ def check_end_state(
     action won (GameState.IS_WIN) or drawn (GameState.IS_DRAW) the game,
     or is play still on-going (GameState.STILL_PLAYING)?
     """
-    raise NotImplemented()
+    if connected_four(board, player, last_action):
+        print("Yes")
+        return GameState(1)
+    elif np.all(board) != 0:
+        return GameState(-1)
+    else:
+        return GameState(0)
+
+
+GenMove = Callable[
+    [np.ndarray, BoardPiece, Optional[SavedState]],  # Arguments for the generate_move function
+    Tuple[PlayerAction, Optional[SavedState]]  # Return type of the generate_move function
+]

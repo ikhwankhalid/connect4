@@ -1,13 +1,12 @@
 import numpy as np
+from connectn.common import initialise_game_state
 
-from connectn.common import board
-
+board = initialise_game_state()
 
 def test_initialise_game_state():
     """
             Returns an ndarray, shape (6, 7) and data type (dtype) BoardPiece, initialized to 0 (NO_PLAYER).
     """
-    from connectn.common import initialise_game_state
 
     ret = initialise_game_state()
 
