@@ -1,4 +1,3 @@
-# from connectn.agent_minmax import generate_move
 from connectn.agent_random import generate_move
 import numpy as np
 from typing import Optional, Callable
@@ -7,12 +6,11 @@ from connectn.common import PlayerAction, BoardPiece, SavedState, GenMove
 
 def user_move(board: np.ndarray, _player: BoardPiece, saved_state: Optional[SavedState]):
     action = PlayerAction(-1)
-    # while not 0 <= board[5][action] < board.shape[1]:
     while not 0 <= action < board.shape[1]:
         try:
             action = PlayerAction(input("Column? "))
         except:
-            pass
+            print("Invalid move!")
     return action, saved_state
 
 
@@ -23,6 +21,7 @@ def human_vs_agent(
         player_2: str = "Player 2",
         args_1: tuple = (),
         args_2: tuple = (),
+        # Lambda: functions that call a variable: None
         init_1: Callable = lambda board, player: None,
         init_2: Callable = lambda board, player: None,
 ):

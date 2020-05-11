@@ -75,12 +75,10 @@ def apply_player_action(
         Sets board[i, action] = player, where i is the lowest open row. The modified
         board is returned. If copy is True, makes a copy of the board before modifying it.
     """
-    for r in range(6):   # We have 6 rows on the game board
-        if board[r][action] == 0:
-            row = r
+    for r in range(6):  # We have 6 rows on the game board
+        if board[r, action] == 0:
+            board[r, action] = player
             break
-
-    board[row][action] = player
 
     return board
 
@@ -97,13 +95,13 @@ def connected_four(
     #   Check for horizontal fours
     for c in np.arange(4):
         for r in np.arange(6):
-            if board[r][c] == player and board[r][c+1] == player and board[r][c+2] == player and board[r][c+3] == player:
+            if board[r, c] == player and board[r, c+1] == player and board[r, c+2] == player and board[r, c+3] == player:
                 return True
 
     #   Check for vertical fours
     for c in np.arange(7):
         for r in np.arange(3):
-            if board[r][c] == player and board[r+1][c] == player and board[r+2][c] == player and board[r+3][c] == player:
+            if board[r, c] == player and board[r+1, c] == player and board[r+2, c] == player and board[r+3, c] == player:
                 return True
     else:
         return False    # Need to explicitly return false to satisfy boolean requirement
