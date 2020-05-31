@@ -1,0 +1,67 @@
+import os
+os.environ["NUMBA_DISABLE_JIT"] = "1"
+import cProfile
+import pstats
+from connectn.agent_random import generate_move
+from connectn.main import human_vs_agent
+
+# For visual feedback, use snakeviz
+# cProfile.run("human_vs_agent(generate_move, generate_move)", "rand")
+
+p = pstats.Stats("rand")
+p.sort_stats("tottime").print_stats(50)
+
+# import numpy as np
+# from connectn.common import initialise_game_state, PLAYER1
+# from numba import njit
+# from timeit import timeit
+# CONN = 4
+#
+#
+# # Numba is an open-source JIT compiler that translates a subset of Python and NumPy
+# # into fast machine code using LLVM, via the llvmlite Python package.
+# # It offers a range of options for parallelising Python code for CPUs and GPUs,
+# # often with only minor code changes.
+# @njit()
+# def connected_four_iter(board, player):
+#     """
+#         Example used in performance optimisation
+#         You want to be accessing the "fastest chancing index" i.e. the right-most
+#         in python. The longer you can keep accessing data in cache, the faster your
+#         program is going to run.
+#     """
+#     rows, cols = board.shape
+#     for i in range(rows - CONN + 1):
+#         for j in range(cols - CONN + 1):
+#             if np.all(board[i, j: j + CONN] == player):
+#                 return True
+#             if np.all(board[i: i + CONN, j] == player):
+#                 return True
+#             block = board[i: i + CONN, j: j + CONN]
+#             if np.all(np.diag(block) == player):
+#                 return True
+#             if np.all(np.diag(block[::-1, :]) == player):
+#                 return True
+#     # See: i doesn't reach top-most row, j doesn't reach right-most column
+#     # Fix below
+#     for i in range(rows - CONN + 1, rows):
+#         if np.all(board[i, -CONN:] == player):
+#             return True
+#     for j in range(cols - CONN + 1, cols):
+#         if np.all(board[-CONN:, j] == player):
+#             return True
+#     return False
+#
+#
+# board = initialise_game_state()
+# number = 10 ** 3
+# # timeit needs a dictionary for the params
+# res = timeit("connected_four_iter(board, player)",
+#              setup="connected_four_iter(board, player)",
+#              number=number,
+#              globals=dict(connected_four_iter=connected_four_iter,
+#                           board=board,
+#                           player=PLAYER1))
+#
+#
+# print(f"Python iter-based: {res / number : .3e}")

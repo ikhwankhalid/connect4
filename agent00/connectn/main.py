@@ -1,7 +1,8 @@
-from connectn.agent_random import generate_move
+# from connectn.agent_random import generate_move
 import numpy as np
 from typing import Optional, Callable
 from connectn.common import PlayerAction, BoardPiece, SavedState, GenMove
+from connectn.agent_minimax import generate_move
 
 
 def user_move(board: np.ndarray, _player: BoardPiece, saved_state: Optional[SavedState]):

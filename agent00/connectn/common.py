@@ -9,9 +9,9 @@ class SavedState:
 
 
 BoardPiece = np.int8
-NO_PLAYER = BoardPiece(0)   # board[i, j] == NO_PLAYER where the position is empty
-PLAYER1 = BoardPiece(1)     # board[i, j] == PLAYER1 where player 1 has a piece
-PLAYER2 = BoardPiece(2)     # board[i, j] == PLAYER2 where player 2 has a piece
+NO_PLAYER = BoardPiece(0)  # board[i, j] == NO_PLAYER where the position is empty
+PLAYER1 = BoardPiece(1)  # board[i, j] == PLAYER1 where player 1 has a piece
+PLAYER2 = BoardPiece(2)  # board[i, j] == PLAYER2 where player 2 has a piece
 
 PlayerAction = np.int8  # The column to be played
 
@@ -50,7 +50,7 @@ def pretty_print_board(board: np.ndarray) -> str:
         |0 1 2 3 4 5 6 |
         TODO: Replace 1->X and 2->O in pretty print
     """
-    board = np.flip(board, 0)   # Flip so that [0, 0] is the bottom left corner
+    board = np.flip(board, 0)  # Flip so that [0, 0] is the bottom left corner
     columns = np.arange(7)
     ret = np.vstack((board, columns))
     ret = np.array2string(ret)
@@ -67,7 +67,6 @@ def string_to_board(pp_board: str) -> np.ndarray:
     raise NotImplemented()
 
 
-# Action corresponds to column, drops the piece down that column, should put the piece at the lowest free spot
 def apply_player_action(
         board: np.ndarray, action: PlayerAction, player: BoardPiece, copy: bool = False
 ) -> np.ndarray:
@@ -91,24 +90,27 @@ def connected_four(
         in either a horizontal, vertical, or diagonal line. Returns False otherwise.
         If desired, the last action taken (i.e. last column played) can be provided
         for potential speed optimisation.
+        TODO: Need to also check for diagonals
     """
     #   Check for horizontal fours
     for c in np.arange(4):
         for r in np.arange(6):
-            if board[r, c] == player and board[r, c+1] == player and board[r, c+2] == player and board[r, c+3] == player:
+            if board[r, c] == player and board[r, c + 1] == player and board[r, c + 2] == player and board[
+                    r, c + 3] == player:
                 return True
 
     #   Check for vertical fours
     for c in np.arange(7):
         for r in np.arange(3):
-            if board[r, c] == player and board[r+1, c] == player and board[r+2, c] == player and board[r+3, c] == player:
+            if board[r, c] == player and board[r + 1, c] == player and board[r + 2, c] == player and board[
+                    r + 3, c] == player:
                 return True
     else:
-        return False    # Need to explicitly return false to satisfy boolean requirement
+        return False
 
 
 def check_end_state(
-    board: np.ndarray, player: BoardPiece, last_action: Optional[PlayerAction] = None,
+        board: np.ndarray, player: BoardPiece, last_action: Optional[PlayerAction] = None,
 ) -> GameState:
     """
     Returns the current game state for the current `player`, i.e. has their last
