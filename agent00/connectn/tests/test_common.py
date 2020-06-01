@@ -3,18 +3,19 @@ from connectn.common import initialise_game_state
 
 board = initialise_game_state()
 
+
 def test_initialise_game_state():
     """
-            Returns an ndarray, shape (6, 7) and data type (dtype) BoardPiece, initialized to 0 (NO_PLAYER).
+        Returns an ndarray, shape (6, 7) and data type (dtype) BoardPiece, initialized to 0 (NO_PLAYER).
     """
 
     ret = initialise_game_state()
 
     # If one of these assertions fail, it logs as a failed test
     assert isinstance(ret, np.ndarray)  # Since ret is asserted as ndarray, pycharm 'knows'
-    assert ret.dtype == np.int8         # Check array entries are integers
-    assert ret.shape == (6, 7)          # Check board is the correct shape
-    assert np.all(ret == 0)             # An array of booleans can't be interpreted as a boolean, so use "all"
+    assert ret.dtype == np.int8  # Check array entries are integers
+    assert ret.shape == (6, 7)  # Check board is the correct shape
+    assert np.all(ret == 0)  # An array of booleans can't be interpreted as a boolean, so use "all"
 
 
 def test_pretty_print_board():
@@ -36,7 +37,7 @@ def test_pretty_print_board():
 
     ret = pretty_print_board(board)
 
-    assert type(ret) == str             # Pretty printed board should be a string
+    assert type(ret) == str  # Pretty printed board should be a string
 
 
 '''
@@ -60,17 +61,17 @@ def test_apply_player_action():
     from connectn.common import initialise_game_state
 
     playboard = initialise_game_state()
-    action = np.random.randint(0,6)
+    action = np.random.randint(0, 6)
 
     ret = apply_player_action(playboard, action, 1)
 
     # If one of these assertions fail, it logs as a failed test
     assert isinstance(ret, np.ndarray)  # Since ret is asserted as ndarray, pycharm 'knows'
-    assert ret.dtype == np.int8         # Check array entries are integers
-    assert ret.shape == (6, 7)          # Check board is the correct shape
-    for c in np.arange(7):              # Check that no non-zero element has a zero element below it
+    assert ret.dtype == np.int8  # Check array entries are integers
+    assert ret.shape == (6, 7)  # Check board is the correct shape
+    for c in np.arange(7):  # Check that no non-zero element has a zero element below it
         for r in np.arange(5):
-            if playboard[r+1][c] != 0:
+            if playboard[r + 1][c] != 0:
                 assert playboard[r][c] != 0
 
 
@@ -88,4 +89,4 @@ def test_connected_four():
     playboard = initialise_game_state()
     ret = connected_four(playboard, 1)
 
-    assert type(ret) == bool    # Either 'winning move' or 'not a winning move'
+    assert type(ret) == bool  # Either 'winning move' or 'not a winning move'
