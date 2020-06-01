@@ -1,8 +1,9 @@
-# from connectn.agent_random import generate_move
 import numpy as np
 from typing import Optional, Callable
 from connectn.common import PlayerAction, BoardPiece, SavedState, GenMove
-from connectn.agent_minimax import generate_move
+from connectn.agent_random import generate_move_random
+from connectn.agent_minimax import generate_move_mm
+from connectn.agent_minimax_ab import generate_move_mmab
 
 
 def user_move(board: np.ndarray, _player: BoardPiece, saved_state: Optional[SavedState]):
@@ -70,4 +71,14 @@ def human_vs_agent(
 
 
 if __name__ == "__main__":
-    human_vs_agent(generate_move)
+    # Let the player choose their opponent agent
+    choice = 10
+    while not type(choice) == int or choice not in [0, 1, 2]:
+        print("Choose your opponent:\n0:Random Agent\n1:MiniMax Agent\n2:MiniMax Agent with AB pruning")
+        choice = int(input())
+    if choice == 0:
+        human_vs_agent(generate_move_random)
+    elif choice == 1:
+        human_vs_agent(generate_move_mm)
+    elif choice == 2:
+        human_vs_agent(generate_move_mmab)

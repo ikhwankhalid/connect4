@@ -1,1 +1,1 @@
-from .minimax import generate_move_mm as generate_move
+from .minimax import generate_move_mm

@@ -8,7 +8,6 @@ def heuristic(board):
     """
     Performs a heuristic on a given game board and returns a score for it. Higher (positive) scores are
     advantageous to player 1 while lower (negative) scores are advantageous to player 2.
-    TODO: Modify heuristic to encourage 'blocking'
 
     Parameters
     ----------
@@ -70,7 +69,7 @@ def heuristic(board):
                 if not r + 3 > board.shape[1] and board[r][c] == board[r + 1][c + 1] == PLAYER1:
                     score += 10
                 if not r + 3 > board.shape[1] and board[r][c] == board[r + 1][c + 1] == board[r + 2][
-                        c + 2] == PLAYER1:
+                    c + 2] == PLAYER1:
                     score += 100
                 if not r + 3 > board.shape[1] and board[r][c] == board[r + 1][c + 1] == board[r + 2][c + 2] \
                         == board[r + 3][c + 3] == PLAYER1:
@@ -93,7 +92,7 @@ def heuristic(board):
                 if not r - 3 > board.shape[1] and board[r][c] == board[r - 1][c - 1] == PLAYER1:
                     score += 10
                 if not r - 3 > board.shape[1] and board[r][c] == board[r - 1][c - 1] == board[r - 2][
-                        c - 2] == PLAYER1:
+                    c - 2] == PLAYER1:
                     score += 100
                 if not r - 3 > board.shape[1] and board[r][c] == board[r - 1][c - 1] == board[r - 2][c - 2] \
                         == board[r - 3][c - 3] == PLAYER1:
@@ -113,10 +112,10 @@ def heuristic(board):
     return score
 
 
-def generate_move_mm(board, player, saved_state: Optional[SavedState]):
+def generate_move_mmab(board, player, saved_state: Optional[SavedState]):
     """
-    Takes in a given board configuration and player as input, then uses the minimax algorithm to
-    generate a move. Depth of the game tree has been fixed to be 4
+    Takes in a given board configuration and player as input, then uses the minimax algorithm
+    with alpha-beta pruning to generate a move. Depth of the game tree has been fixed to be 8
 
     Parameters
     ----------
@@ -132,15 +131,19 @@ def generate_move_mm(board, player, saved_state: Optional[SavedState]):
     action : int
         An action to play generated from the minimax algorithm
     """
-    best_score, action = mini_max(board, player, 4)
+    depth = 8
+    alpha = -100000000
+    beta = 100000000
+    best_score, action = mini_max_ab(board, player, depth, alpha, beta)
 
     return action, saved_state
 
 
-def mini_max(board, player, depth):
+def mini_max_ab(board, player, depth, alpha, beta):
     """
     Takes in a board configuration, player, and tree depth as input, then performs a tree-search of the game
-    space using a minimax algorithm. Outputs the best score and the corresponding best move for the given depth.
+    space using a minimax algorithm with alpha-beta pruning. Outputs the best score and the corresponding
+    best move for the given depth.
 
     Parameters
     ----------
@@ -150,6 +153,10 @@ def mini_max(board, player, depth):
         Maximising/minimising player
     depth : int
         Maximum depth of the tree-search algorithm
+    alpha : int
+        Minimum score of the maximising player
+    beta : int
+        Maximum score of the minimising player
 
     Returns
     -------
@@ -198,11 +205,19 @@ def mini_max(board, player, depth):
     # Get scores of child boards
     for child in children:
         move, child_board = child
-        interim = mini_max(child_board, player, depth - 1)[0]
+        interim = mini_max_ab(child_board, player, depth - 1, alpha, beta)[0]
 
         # Replace best score and best move if a move leads to a 'better' score for the player
         if replace(interim):
             best_score = interim
             best_move = move
+
+        # Perform alpha-beta pruning
+        if player == PLAYER1:
+            alpha = max(alpha, interim)
+        else:
+            beta = min(beta, interim)
+        if alpha >= beta:
+            break
 
     return best_score, best_move
